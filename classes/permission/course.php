@@ -6,7 +6,7 @@
  * 
  */
 
-namespace mod_template\permission;
+namespace mod_hypervideo\permission;
 
 defined('MOODLE_INTERNAL') || die();
 

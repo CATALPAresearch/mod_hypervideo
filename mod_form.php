@@ -7,7 +7,7 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 /**
  * Module instance settings form
  */
-class mod_template_mod_form extends moodleform_mod {
+class mod_hypervideo_mod_form extends moodleform_mod {
     /**
      * Defines forms elements.
      */
@@ -32,6 +32,19 @@ class mod_template_mod_form extends moodleform_mod {
 
         // Adding the standard "intro" and "introformat" fields.
         $this->standard_intro_elements();
+
+        // Adding a text field "url" for the video URL
+        
+        $mform->addElement('text', 'url', 'URL', array(
+            //'size' => '2048'
+        ));
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('url', PARAM_TEXT);
+        } else {
+            $mform->setType('url', PARAM_CLEANHTML);
+        }
+        //$mform->addRule('url', null, 'required', null, 'client');
+        //$mform->addRule('url', get_string('maximumchars', '', 2048), 'maxlength', 2048, 'client');
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();

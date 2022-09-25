@@ -1,5 +1,5 @@
 # Namen des Plugins ändern
-    - view.php 'mod_template' zu 'mod_NAME'
+    - view.php 'mod_hypervideo' zu 'mod_NAME'
     - lang/en template.php umbenennen zu NAME.php
     - view.php, Zeile 13,17
     - db/install.xml, Zeile 2

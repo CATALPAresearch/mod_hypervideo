@@ -4,10 +4,10 @@
     
     $settings->add(
         new admin_setting_configtext(
-            'template/someconfig', 
-            get_string('confentry', 'template'),
-            get_string('confdescription', 'template'), 
-            get_string('confvalue', 'template'), 
+            'hypervideo/someconfig', 
+            get_string('confentry', 'hypervideo'),
+            get_string('confdescription', 'hypervideo'), 
+            get_string('confvalue', 'hypervideo'), 
             PARAM_RAW, 
             40
         )

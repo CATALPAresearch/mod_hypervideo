@@ -6,16 +6,17 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'mod/template:addinstance' => array(
+    'mod/hypervideo:addinstance' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
         ),
     ),
 
-    'mod/template:view' => array(
+    'mod/hypervideo:view' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(

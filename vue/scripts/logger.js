@@ -10,8 +10,9 @@ import ajax from 'core/ajax';
 
 export default function (courseId, options) {
     this.courseId = courseId;
-    this.name = 'log_longpage';
+    this.name = 'log_hypervideo';
     this.ip = '';
+    this.url = options.url;
 
     this.init = function(){
         this.options = this.mergeObjects({
@@ -39,8 +40,9 @@ export default function (courseId, options) {
                 //port: window.location.port,
                 host: window.location.host,
                 pathname: window.location.href,
-                hash: window.location.hash,
-                tabId: window.name.split('=')[0] === "APLE-MOODLE" ? window.name.split('=')[1] : "unknown"
+                url: this.url,
+                //hash: window.location.hash,
+                //tabId: window.name.split('=')[0] === "APLE-MOODLE" ? window.name.split('=')[1] : "unknown"
             },
             context: this.options.context,
             action: action,
@@ -50,10 +52,10 @@ export default function (courseId, options) {
                 platform: navigator.platform,
                 engine: navigator.product,
                 browser: navigator.appCodeName,
-                browserVersion: navigator.appVersion,
+                /*browserVersion: navigator.appVersion,
                 userAgent: navigator.userAgent.replace(/,/gm, ';'),
                 screenHeight: screen.height, // document.body.clientHeight
-                screenWidth: screen.width // document.body.clientWidth
+                screenWidth: screen.width // document.body.clientWidth*/
                 // retina
             }
         };
@@ -99,11 +101,11 @@ export default function (courseId, options) {
     this.output = function (logEntry) {
         switch (this.options.outputType) {
             case 0:
-                console.log(logEntry);
+                console.log('case 0: ',logEntry);
                 break;
             case 1:
                 this.sendLog(logEntry);
-                //console.log(logEntry.value);
+                console.log('case 1: ',logEntry);
                 break;
             default:
             // Do nothing
@@ -116,7 +118,7 @@ export default function (courseId, options) {
     this.sendLog = function (entry) {
         let _this = this;
         ajax.call([{
-            methodname: 'media_hypervideo_log',
+            methodname: 'mod_hypervideo_log',
             args: {
                 data: {
                     courseid: _this.courseId,
@@ -126,7 +128,7 @@ export default function (courseId, options) {
                 }
             },
             done: function (msg) {
-                // console.log('ok', msg);
+                 console.log('server log ok ', msg);
             },
             fail: function (e) {
                 console.error('fail', e);

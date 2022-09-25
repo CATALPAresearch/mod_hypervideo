@@ -1,40 +1,40 @@
 <?php
 
-function template_add_instance($data) {
+function hypervideo_add_instance($data) {
     global $DB;
 
     $data->timecreated = time();
     $data->timemodified = time();
 
-    $id = $DB->insert_record('template', $data);
+    $id = $DB->insert_record('hypervideo', $data);
     return $id;
 }
 
 
-function template_update_instance($data) {
+function hypervideo_update_instance($data) {
     
     global $DB;
 
     $data->timemodified = time();
     $data->id = $data->instance;
 
-    return $DB->update_record('template', $data);
+    return $DB->update_record('hypervideo', $data);
 }
 
-function template_delete_instance($id) {
+function hypervideo_delete_instance($id) {
 
     global $DB;
 
-    if(!$DB->get_record('template', array('id' => $id))) {
+    if(!$DB->get_record('hypervideo', array('id' => $id))) {
         return false;
     }
 
-    $DB->delete_records('template', ['id' => $id]);    
+    $DB->delete_records('hypervideo', ['id' => $id]);    
     return true;
 }
 
 
-function template_supports($feature) {
+function hypervideo_supports($feature) {
     switch ($feature) {
         case FEATURE_GROUPS:
             return false;

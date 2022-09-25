@@ -103,7 +103,7 @@ export const store = new Vuex.Store({
     actions: {
         async loadComponentStrings(context) {
             const lang = $('html').attr('lang').replace(/-/g, '_');
-            const cacheKey = 'mod_template/strings/' + lang;
+            const cacheKey = 'mod_hypervideo/strings/' + lang;
             const cachedStrings = moodleStorage.get(cacheKey);
             if (cachedStrings) {
                 context.commit('setStrings', JSON.parse(cachedStrings));
@@ -111,7 +111,7 @@ export const store = new Vuex.Store({
                 const request = {
                     methodname: 'core_get_component_strings',
                     args: {
-                        'component': 'mod_template',
+                        'component': 'mod_hypervideo',
                         lang,
                     },
                 };

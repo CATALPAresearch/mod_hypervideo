@@ -8,7 +8,7 @@ import VueCoreVideoPlayer from 'vue-core-video-player'
 
 function init(coursemoduleid, contextid, fullPluginName, url, title) {    
     // We need to overwrite the variable for lazy loading.
-    __webpack_public_path__ = M.cfg.wwwroot + '/mod/template/amd/build/';
+    __webpack_public_path__ = M.cfg.wwwroot + '/mod/hypervideo/amd/build/';
     
     Communication.setPluginName(fullPluginName);
     
@@ -25,11 +25,11 @@ function init(coursemoduleid, contextid, fullPluginName, url, title) {
 
     // You have to use child routes if you use the same component. Otherwise the component's beforeRouteUpdate
     // will not be called.
-    const routes = [
+    /*const routes = [
         { path: '/', component: mainPage},
         { path: '/store', component: storePage},
         { path: '*', component: notFound}
-    ];
+    ];*/
 
     // base URL is /mod/vuejsdemo/view.php/[course module id]/
     const currenturl = window.location.pathname;
@@ -37,11 +37,11 @@ function init(coursemoduleid, contextid, fullPluginName, url, title) {
 
     const router = new VueRouter({
         mode: 'history',
-        routes,
+       // routes,
         base
     });
 
-    router.beforeEach((to, from, next) => {
+    /*router.beforeEach((to, from, next) => {
         // Find a translation for the title.
         if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
             if (store.state.strings.hasOwnProperty(to.meta.title)) {
@@ -49,12 +49,12 @@ function init(coursemoduleid, contextid, fullPluginName, url, title) {
             }
         }
         next()
-    });
+    });*/
 
     new Vue({
         el: '#app',
         store,
-        router,
+       // router,
         render: (h) => h(App),
     });
 }

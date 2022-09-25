@@ -6,7 +6,7 @@
  * 
  */
 
-namespace mod_template\core;
+namespace mod_hypervideo\core;
 
 defined('MOODLE_INTERNAL') || die();
 
