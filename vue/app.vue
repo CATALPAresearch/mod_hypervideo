@@ -2,7 +2,15 @@
     <div>
         <div class="hypervideo">
             <div class="player-container" style="width:100%; max-width:800px; height:auto;">
-                <vue-core-video-player :src="url" @play="start" @pause="stop" @ended="ended" @abort="stop" @seeked="seeked">
+                <vue-core-video-player :src="url" 
+                    @play="start" 
+                    @pause="stop"
+                    @loadeddata="canplay" 
+                    @timeupdate="timeupdate"
+                    @seeked="seeked" 
+                    @seeking="seeking" 
+                    @ended="ended" 
+                    @abort="stop">
                 </vue-core-video-player>
             </div>
             <div v-if="overlayVisible" class="overlay m-3 p-3">
@@ -11,8 +19,10 @@
                 <div class="block mb-3">
                     <div class="question mb-1">
                         Wie beurteilen Sie das Video, das Sie gerade gesehen haben?
-                        <i @click="q1='up'" :style="q1=='up' ? 'color:blue;' : 'color:#333;'" class="fa fa-thumbs-up ml-3 buttons"></i>
-                        <i @click="q1='down'" :style="q1=='down' ? 'color:blue;' : 'color:#333;'" class="fa fa-thumbs-down ml-3 buttons" ></i>
+                        <i @click="q1='up'" :style="q1=='up' ? 'color:blue;' : 'color:#333;'"
+                            class="fa fa-thumbs-up ml-3 buttons"></i>
+                        <i @click="q1='down'" :style="q1=='down' ? 'color:blue;' : 'color:#333;'"
+                            class="fa fa-thumbs-down ml-3 buttons"></i>
                     </div>
                 </div>
                 <div class="block mb-3">
@@ -30,19 +40,24 @@
                     <div class="form-group">
                         <div class="form-check form-check-inline"><i class="fa fa-smile"></i></div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" v-model="q3" name="moodRadio" value="1" class="form-check-input mr-2 ml-2 radio-ho" />
+                            <input type="radio" v-model="q3" name="moodRadio" value="1"
+                                class="form-check-input mr-2 ml-2 radio-ho" />
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" v-model="q3" name="moodRadio" value="2" class="form-check-input mr-2 ml-2 radio-ho" />
+                            <input type="radio" v-model="q3" name="moodRadio" value="2"
+                                class="form-check-input mr-2 ml-2 radio-ho" />
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" v-model="q3" name="moodRadio" value="3" class="form-check-input mr-2 ml-2 radio-ho" />
+                            <input type="radio" v-model="q3" name="moodRadio" value="3"
+                                class="form-check-input mr-2 ml-2 radio-ho" />
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" v-model="q3" name="moodRadio" value="4" class="form-check-input mr-2 ml-2 radio-ho" />
+                            <input type="radio" v-model="q3" name="moodRadio" value="4"
+                                class="form-check-input mr-2 ml-2 radio-ho" />
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" v-model="q3" name="moodRadio" value="5" class="form-check-input mr-2 ml-2 radio-ho" />
+                            <input type="radio" v-model="q3" name="moodRadio" value="5"
+                                class="form-check-input mr-2 ml-2 radio-ho" />
                         </div>
                         <div class="form-check form-check-inline">
                             <i class="fa fa-frown mt-1"></i>
@@ -72,7 +87,7 @@
     background-color: antiquewhite;
     opacity: 0.8;
     width: 100%;
-    max-width:700px;
+    max-width: 700px;
     margin: 50 auto;
 }
 
@@ -91,21 +106,21 @@
 }
 
 .overlay .fa {
-    font-size:1.4em;
+    font-size: 1.4em;
 }
 
-.overlay .fa-frown, .overlay .fa-smile {
-    font-size:2.1em;
+.overlay .fa-frown,
+.overlay .fa-smile {
+    font-size: 2.1em;
 }
 
 .overlay .buttons:hover {
     color: blue;
 }
 
-.overlay .radio-ho:hover{
-    background-color:blue;
+.overlay .radio-ho:hover {
+    background-color: blue;
 }
-
 </style>
 <script>
 import Logger from './scripts/logger';
@@ -116,49 +131,46 @@ export default {
         return {
             context: {},
             video: null,
+            seek_start: 0,
             videoid: 0,
             interval: 2,
             lastposition: -1,
             timer: null,
             logger: null,
             overlayVisible: true,
-            q1:null,
-            q2:null,
-            q3:null
+            dismissed: false,
+            q1: null,
+            q2: null,
+            q3: null
         }
     },
     mounted: function () {
-        this.context.courseId = 2; 
+        this.context.courseId = 2; // TODO
         this.videoid = 'videoid' + Math.floor(Math.random() * 1000);
         this.logger = new Logger(this.context.courseId, {
-                    context: "media_hypervideo",
-                    outputType: 1,
-                    url: this.$store.state.url
-                });
+            context: "media_hypervideo",
+            outputType: 1,
+            url: this.$store.state.url
+        });
         this.logger.init();
-
-    },
-    computed: {
-        
     },
     methods: {
-        /*
-        this.video.addEventListener('timeupdate', function (e) {
-            //_this.start();
-        });
-         player.oncanplay(start);
-                player.onSeek(restart);
-         player.onPause(stop);
-             player.onBuffer(stop);
-         player.onIdle(stop);
-         player.onComplete(stop);
-             player.onError(stop);
-       */
+        canplay: function(e){
+            let _this = this;
+            this.video = e.target;
+            this.video.setAttribute(id, this.videoid);
+            console.log('can play')
+            this.video.addEventListener('seeking', function(ee){
+                //_this.seek_start = _this.video.currentTime || 0;
+            });
+        },
+        timeupdate: function(e){
+            this.seek_start = this.video.currentTime;
+        },
         loop: function (e) {
-            var interval = 2, lastposition = -1;
+            var lastposition = -1;
             var curr = this.video.currentTime || 0;
-            var currentinterval = curr > 0 ? Math.round(curr / interval) : 0;
-            //console.log(currentinterval)
+            var currentinterval = curr > 0 ? Math.round(curr / this.interval) : 0;
             if (currentinterval != lastposition) {
                 this.log('playback', { context: 'player', action: 'playback', values: currentinterval, currenttime: this.video.currentTime });
                 lastposition = currentinterval;
@@ -166,7 +178,7 @@ export default {
         },
         start: function (e) {
             this.video = e.target;
-            this.log('play', { context: 'player', action: 'play', values:'' ,currenttime: this.video.currentTime });
+            this.log('play', { context: 'player', action: 'play', values: '', currenttime: this.video.currentTime });
             this.video.setAttribute('id', this.id)
             if (this.timer) {
                 this.timer = clearInterval(this.timer);
@@ -183,26 +195,46 @@ export default {
             setTimeout(this.loop, 100);
         },
         stop: function () {
-            this.log('pause', { context: 'player', action: 'pause', values:'' ,currenttime: this.video.currentTime });
+            this.log('pause', { context: 'player', action: 'pause', values: '', currenttime: this.video.currentTime });
             this.timer = clearInterval(this.timer);
             this.loop();
         },
-        seeked: function(e){
-            console.log('eeeee', e)
-            this.log('seeked', { context: 'player', action: 'seeked', values:'' ,currenttime: this.video.currentTime });
+        seeking: function (e) {
+            console.log('seeking', this.video.currentTime);
         },
-        ended: function(){
-            this.log('ended', { context: 'player', action: 'ended', values:'' ,currenttime: this.video.currentTime });
+        seeked: function (e) {
+            console.log(e);
+            console.log('::: seeked started at ', this.seek_start, this.video.currentTime, this.video.currentTime-this.seek_start);
+            this.log('seeked', { context: 'player', action: 'seeked', values: '', currenttime: this.video.currentTime });
+        },
+        ended: function () {
+            this.log('ended', { context: 'player', action: 'ended', values: '', currenttime: this.video.currentTime });
             this.timer = clearInterval(this.timer);
             this.loop();
         },
-        log: function(key, values) {
+        log: function (key, values) {
             var a = this.logger ? this.logger.add(key, values) : null;
         },
-        closeOverlay: function(){
-            this.overlayVisible = false;
+        watchSurvey: function(){
+            /**
+             * load total watched segments
+             * if ()
+             * if ( Math.round( watched_segments / Math.floor(this.video.duration/this.interval) ) )
+             * if (Math.random()>0.66){ this.openOverlay; }
+             * 
+             * SELECT count(action)
+FROM `mdl_hypervideo_log`
+WHERE value<>0 AND action='playback'
+             */
         },
-        submitOverlay: function(){
+        openOverlay: function () {
+            this.overlayVisible = true;
+        },
+        closeOverlay: function () {
+            this.overlayVisible = false;
+            this.dismissed = true;
+        },
+        submitOverlay: function () {
             let _this = this;
             var date = new Date();
             ajax.call([{
@@ -234,7 +266,6 @@ export default {
         title: function () {
             return this.$store.state.title;
         },
-
         alertType: function () {
             return this.$store.getters.getAlertType;
         },

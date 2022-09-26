@@ -105,7 +105,7 @@ export default function (courseId, options) {
                 break;
             case 1:
                 this.sendLog(logEntry);
-                console.log('case 1: ',logEntry);
+                //console.log('case 1: ',logEntry);
                 break;
             default:
             // Do nothing
@@ -128,7 +128,7 @@ export default function (courseId, options) {
                 }
             },
             done: function (msg) {
-                 console.log('server log ok ', msg);
+                 //console.log('server log ok ', msg);
             },
             fail: function (e) {
                 console.error('fail', e);
