@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="hypervideo">
-            <div class="player-container" style="width:100%; max-width:800px; height:auto;">
+            <div class="player-container" style="width:100%; max-width:800px; margin-top:30px; height:auto;">
                 <vue-core-video-player :src="url" 
                     @play="start" 
                     @pause="stop"
@@ -14,8 +14,6 @@
                 </vue-core-video-player>
             </div>
             <div v-if="overlayVisible" class="overlay m-3 p-3">
-                {{q1}}, {{q2}}, {{q3}}
-
                 <div class="block mb-3">
                     <div class="question mb-1">
                         Wie beurteilen Sie das Video, das Sie gerade gesehen haben?
@@ -84,7 +82,7 @@
     top: 0px;
     left: 0px;
     z-index: 30000;
-    background-color: antiquewhite;
+    background-color: #e9f5f9;
     opacity: 0.8;
     width: 100%;
     max-width: 700px;
@@ -118,9 +116,14 @@
     color: blue;
 }
 
-.overlay .radio-ho:hover {
+.overlay .radio-ho:hover{
     background-color: blue;
 }
+
+.overlay .fa-thumbs-up:hover, .overlay .fa-thumbs-down:hover {
+    color: blue;
+}
+
 </style>
 <script>
 import Logger from './scripts/logger';
