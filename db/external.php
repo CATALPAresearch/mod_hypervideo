@@ -62,6 +62,7 @@ class mod_hypervideo_external extends external_api {
                     new external_single_structure(
                         array(
                             'courseid' => new external_value(PARAM_INT, 'id of course', VALUE_OPTIONAL),
+                            'hypervideoid' => new external_value(PARAM_INT, 'id of course', VALUE_OPTIONAL),
                             'action' => new external_value(PARAM_TEXT, '..action', VALUE_OPTIONAL),
                             'utc' => new external_value(PARAM_INT, '...utc time', VALUE_OPTIONAL),
                             'entry' => new external_value(PARAM_RAW, 'log data', VALUE_OPTIONAL)
@@ -78,7 +79,7 @@ class mod_hypervideo_external extends external_api {
      * entry: JSON.stringify(entry)
      */
     public static function log($data) {
-        global $CFG, $DB, $USER;
+        global $CFG, $DB, $USER; $COURSE;
         $r = new stdClass();
         $r->component = 'mod_hypervideo';
         $r->eventname = '\mod_hypervideo\event\course_module_' . $data['action'];
@@ -111,7 +112,7 @@ class mod_hypervideo_external extends external_api {
     
         $d = json_decode($data['entry']);
         $s = new stdClass();
-        $s->hypervideo  = (int) 99;
+        $s->hypervideo  = (int) $data['hypervideoid'];
         $s->user = (int) $USER->id;
         $s->course = (int) $data['courseid'];	 
         $s->url = (String) $d->location->url;
@@ -119,6 +120,7 @@ class mod_hypervideo_external extends external_api {
         $s->position = (String) $d->value->currenttime;
         $s->action = (String) $d->action;
         $s->value  = (String) $d->value->values;
+        $s->duration  = (String) $d->value->duration;
         $s->timemodified = (int) $d->utc;
         
         try {

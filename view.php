@@ -46,13 +46,16 @@ $PAGE->set_heading($hypervideo->name);
 $PAGE->set_url('/mod/hypervideo/view.php', array('id' => $cm->id));
 
 echo $OUTPUT->header();
-//echo '';
+
+//echo ''.$hypervideo->id;
 echo <<<'EOT'
 <div id="app"></div>
 EOT;
 $PAGE->requires->js_call_amd('mod_hypervideo/app-lazy', 'init', [
     'coursemoduleid' => $cm->id,
     'contextid' => 0,//$cm->context->id,
+    'courseid' => $course->id,
+    'hypervideoid' => $hypervideo->id,
     'fullPluginName' => 'mod_hyperaudio',
     'url' => $hypervideo->url,
     'title' => 'Video: '. $hypervideo->name

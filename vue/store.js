@@ -12,7 +12,9 @@ export const store = new Vuex.Store({
         pluginName: '',
         courseModuleID: 0,
         contextID: 0,
+        courseid: -1,
         url: '',
+        hypervideoid: '',
         title: '',
         strings: {},
         isModerator: false,        
@@ -25,8 +27,14 @@ export const store = new Vuex.Store({
     },
     //strict: process.env.NODE_ENV !== 'production',
     mutations: {
+        setCourseid(state, id) {
+            state.courseid = id;
+        },
         setURL(state, url){
             state.url = url;
+        },
+        setHypervideoid(state, val){
+            state.hypervideoid = val;
         },
         setTitle(state, title){
             state.title = title;
@@ -66,8 +74,14 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
+        getCourseid: function(state){
+            return state.courseid;
+        },
         getURL: function(state){
             return state.url;
+        },
+        getHypervideoid: function(state){
+            return state.hypervideoid;
         },
         getTitle: function(state){
             return state.title;

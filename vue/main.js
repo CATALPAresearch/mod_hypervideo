@@ -6,7 +6,7 @@ import Communication from './scripts/communication';
 import VueCoreVideoPlayer from 'vue-core-video-player'
 
 
-function init(coursemoduleid, contextid, fullPluginName, url, title) {    
+function init(coursemoduleid, contextid, courseid, hypervideoid, fullPluginName, url, title) {    
     // We need to overwrite the variable for lazy loading.
     __webpack_public_path__ = M.cfg.wwwroot + '/mod/hypervideo/amd/build/';
     
@@ -15,21 +15,16 @@ function init(coursemoduleid, contextid, fullPluginName, url, title) {
     Vue.use(VueRouter);    
     Vue.use(VueCoreVideoPlayer)
     
-    
     store.commit('setPluginName', fullPluginName);
     store.commit('setCourseModuleID', coursemoduleid);
+    store.commit('setHypervideoid', hypervideoid);
+    store.commit('setCourseid', courseid);
     store.commit('setContextID', contextid);
     store.commit('setURL', url);
     store.commit('setTitle', title);
     store.dispatch('loadComponentStrings');
 
-    // You have to use child routes if you use the same component. Otherwise the component's beforeRouteUpdate
-    // will not be called.
-    /*const routes = [
-        { path: '/', component: mainPage},
-        { path: '/store', component: storePage},
-        { path: '*', component: notFound}
-    ];*/
+    
 
     // base URL is /mod/vuejsdemo/view.php/[course module id]/
     const currenturl = window.location.pathname;
@@ -41,20 +36,9 @@ function init(coursemoduleid, contextid, fullPluginName, url, title) {
         base
     });
 
-    /*router.beforeEach((to, from, next) => {
-        // Find a translation for the title.
-        if (to.hasOwnProperty('meta') && to.meta.hasOwnProperty('title')) {
-            if (store.state.strings.hasOwnProperty(to.meta.title)) {
-                document.title = store.state.strings[to.meta.title];
-            }
-        }
-        next()
-    });*/
-
     new Vue({
         el: '#app',
         store,
-       // router,
         render: (h) => h(App),
     });
 }

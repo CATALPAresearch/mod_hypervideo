@@ -19,6 +19,8 @@
                         Wie beurteilen Sie das Video, das Sie gerade gesehen haben?
                         <i @click="q1='up'" :style="q1=='up' ? 'color:blue;' : 'color:#333;'"
                             class="fa fa-thumbs-up ml-3 buttons"></i>
+                        <i @click="q1='middle'" :style="q1=='middle' ? 'color:blue;' : 'color:#333;'"
+                            class="fa fa-thumbs-up thumbs-horizontal ml-3 buttons"></i>    
                         <i @click="q1='down'" :style="q1=='down' ? 'color:blue;' : 'color:#333;'"
                             class="fa fa-thumbs-down ml-3 buttons"></i>
                     </div>
@@ -91,7 +93,7 @@
 
 .question {
     font-size: 1.4em;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .block textarea {
@@ -112,6 +114,10 @@
     font-size: 2.1em;
 }
 
+.overlay .thumbs-horizontal{
+    transform: rotate(270deg);
+}
+
 .overlay .buttons:hover {
     color: blue;
 }
@@ -120,9 +126,14 @@
     background-color: blue;
 }
 
+.overlay .fa-thumbs-up, .overlay .fa-thumbs-down {
+    cursor: pointer;
+}
+
 .overlay .fa-thumbs-up:hover, .overlay .fa-thumbs-down:hover {
     color: blue;
 }
+
 
 </style>
 <script>
@@ -132,7 +143,6 @@ import ajax from 'core/ajax';
 export default {
     data: function () {
         return {
-            context: {},
             video: null,
             seek_start: 0,
             videoid: 0,
@@ -140,7 +150,7 @@ export default {
             lastposition: -1,
             timer: null,
             logger: null,
-            overlayVisible: true,
+            overlayVisible: false,
             dismissed: false,
             q1: null,
             q2: null,
@@ -148,24 +158,27 @@ export default {
         }
     },
     mounted: function () {
-        this.context.courseId = 2; // TODO
         this.videoid = 'videoid' + Math.floor(Math.random() * 1000);
-        this.logger = new Logger(this.context.courseId, {
+        this.logger = new Logger(this.$store.state.courseid, this.$store.state.hypervideoid, {
             context: "media_hypervideo",
             outputType: 1,
             url: this.$store.state.url
         });
+        console.log(1);
         this.logger.init();
+        console.log(2);
     },
     methods: {
         canplay: function(e){
+            console.log(3);
             let _this = this;
             this.video = e.target;
-            this.video.setAttribute(id, this.videoid);
+            this.video.setAttribute('id', this.videoid);
             console.log('can play')
-            this.video.addEventListener('seeking', function(ee){
+            this.video.addEventListener('seeking', function(e){
                 //_this.seek_start = _this.video.currentTime || 0;
             });
+            console.log(4);
         },
         timeupdate: function(e){
             this.seek_start = this.video.currentTime;
@@ -175,13 +188,13 @@ export default {
             var curr = this.video.currentTime || 0;
             var currentinterval = curr > 0 ? Math.round(curr / this.interval) : 0;
             if (currentinterval != lastposition) {
-                this.log('playback', { context: 'player', action: 'playback', values: currentinterval, currenttime: this.video.currentTime });
+                this.log('playback', { context: 'player', action: 'playback', values: currentinterval, currenttime: this.video.currentTime, duration: this.video.duration });
                 lastposition = currentinterval;
             }
         },
         start: function (e) {
             this.video = e.target;
-            this.log('play', { context: 'player', action: 'play', values: '', currenttime: this.video.currentTime });
+            this.log('play', { context: 'player', action: 'play', values: '', currenttime: this.video.currentTime, duration: this.video.duration });
             this.video.setAttribute('id', this.id)
             if (this.timer) {
                 this.timer = clearInterval(this.timer);
@@ -198,7 +211,7 @@ export default {
             setTimeout(this.loop, 100);
         },
         stop: function () {
-            this.log('pause', { context: 'player', action: 'pause', values: '', currenttime: this.video.currentTime });
+            this.log('pause', { context: 'player', action: 'pause', values: '', currenttime: this.video.currentTime, duration: this.video.duration });
             this.timer = clearInterval(this.timer);
             this.loop();
         },
@@ -208,10 +221,10 @@ export default {
         seeked: function (e) {
             console.log(e);
             console.log('::: seeked started at ', this.seek_start, this.video.currentTime, this.video.currentTime-this.seek_start);
-            this.log('seeked', { context: 'player', action: 'seeked', values: '', currenttime: this.video.currentTime });
+            this.log('seeked', { context: 'player', action: 'seeked', values: '', currenttime: this.video.currentTime, duration: this.video.duration });
         },
         ended: function () {
-            this.log('ended', { context: 'player', action: 'ended', values: '', currenttime: this.video.currentTime });
+            this.log('ended', { context: 'player', action: 'ended', values: '', currenttime: this.video.currentTime, duration: this.video.duration });
             this.timer = clearInterval(this.timer);
             this.loop();
         },
@@ -244,7 +257,7 @@ WHERE value<>0 AND action='playback'
                 methodname: 'mod_hypervideo_survey',
                 args: {
                     data: {
-                        courseid: _this.courseId,
+                        courseid: _this.$store.state.courseid,
                         url: _this.url,
                         utc: Math.ceil(date.getTime() / 1000),
                         q1: _this.q1,

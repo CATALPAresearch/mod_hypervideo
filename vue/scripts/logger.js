@@ -8,8 +8,9 @@
  */
 import ajax from 'core/ajax';
 
-export default function (courseId, options) {
-    this.courseId = courseId;
+export default function (courseid, hypervideoid, options) {
+    this.courseid = courseid;
+    this.hypervideoid = hypervideoid;
     this.name = 'log_hypervideo';
     this.ip = '';
     this.url = options.url;
@@ -115,13 +116,21 @@ export default function (courseId, options) {
     /**
      * Makes an AJAX call to send the log data set to the server
      */
-    this.sendLog = function (entry) {
+    this.sendLog = function (entry) { 
         let _this = this;
+        console.log(9999, {
+            courseid: _this.courseid,
+            hypervideoid: _this.hypervideoid,
+            action: entry.action,
+            utc: Math.ceil(entry.utc / 1000),
+            entry: JSON.stringify(entry)
+        })
         ajax.call([{
             methodname: 'mod_hypervideo_log',
             args: {
                 data: {
-                    courseid: _this.courseId,
+                    courseid: _this.courseid,
+                    hypervideoid: _this.hypervideoid,
                     action: entry.action,
                     utc: Math.ceil(entry.utc / 1000),
                     entry: JSON.stringify(entry)

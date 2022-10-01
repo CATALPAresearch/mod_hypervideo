@@ -30,6 +30,7 @@
                 <FIELD NAME="position" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="action" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="value" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
