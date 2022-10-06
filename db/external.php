@@ -79,7 +79,7 @@ class mod_hypervideo_external extends external_api {
      * entry: JSON.stringify(entry)
      */
     public static function log($data) {
-        global $CFG, $DB, $USER; $COURSE;
+        global $DB, $USER; 
         $r = new stdClass();
         $r->component = 'mod_hypervideo';
         $r->eventname = '\mod_hypervideo\event\course_module_' . $data['action'];
@@ -102,42 +102,42 @@ class mod_hypervideo_external extends external_api {
 
         try {
             $transaction = $DB->start_delegated_transaction();
-            $res = $DB->insert_record("logstore_standard_log", (array) $r);
+            $DB->insert_record("logstore_standard_log", (array) $r);
             $transaction->allow_commit();
         } catch (Exception $e) {
             $transaction->rollback($e);
             error_log("writing video log to logstore failed");
         }
-
-    
-        $d = json_decode($data['entry']);
-        $s = new stdClass();
-        $s->hypervideo  = (int) $data['hypervideoid'];
-        $s->user = (int) $USER->id;
-        $s->course = (int) $data['courseid'];	 
-        $s->url = (String) $d->location->url;
-        $s->context = (String) $d->value->context;
-        $s->position = (String) $d->value->currenttime;
-        $s->action = (String) $d->action;
-        $s->value  = (String) $d->value->values;
-        $s->duration  = (String) $d->value->duration;
-        $s->timemodified = (int) $d->utc;
         
+        $d = json_decode($data['entry']);
+        $res = -1;
         try {
-            $transaction = $DB->start_delegated_transaction();
-            $res2 = $DB->insert_record("hypervideo_log", (array) $s);
-            $transaction->allow_commit();
-            error_log("scrolldb good");
+            $transaction2 = $DB->start_delegated_transaction();
+            $res = $DB->insert_record('hypervideo_log', [
+                'hypervideo'  => $data['hypervideoid'],
+                'userid' => $USER->id,
+                'course' => $data['courseid'],
+                'url' => $d->location->url,
+                'context' => $d->value->context,
+                'position' => round($d->value->currenttime, 3),
+                'action' => $d->action,
+                'value'  => $d->value->values,
+                'duration'  => round($d->value->duration, 3),
+                'timemodified' => $d->utc
+            ]);
+            $transaction2->allow_commit();
+            //error_log("scrolldb good");
         } catch (Exception $e) {
-                $transaction->rollback($e);
-                error_log("writing video log to hypervideo log table failed");
+            $transaction->rollback($e);
+            error_log("writing video log to hypervideo log table failed");
         }
         
-        return array('response' => json_encode($s));
+        return array('response' => json_encode($res));
     }    
   
 
     public static function log_returns() {
+        //return null;
         return new external_single_structure(
             array('response' => new external_value(PARAM_RAW, 'Server respons to the incomming log'))
         );

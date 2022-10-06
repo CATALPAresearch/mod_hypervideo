@@ -19,7 +19,8 @@ export default class Communication{
                     done: function(data){                                                                
                         return resolve(data);
                     },
-                    fail: function(error){                                                                
+                    fail: function(error){  
+                        console.log('Error at Webservice: '+Communication.fullName + '_' + method, error);                                                              
                         return reject(error);
                     }                  
                 }]);

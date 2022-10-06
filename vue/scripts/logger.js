@@ -118,13 +118,13 @@ export default function (courseid, hypervideoid, options) {
      */
     this.sendLog = function (entry) { 
         let _this = this;
-        console.log(9999, {
+        /*console.log(9999, {
             courseid: _this.courseid,
             hypervideoid: _this.hypervideoid,
             action: entry.action,
             utc: Math.ceil(entry.utc / 1000),
             entry: JSON.stringify(entry)
-        })
+        })*/
         ajax.call([{
             methodname: 'mod_hypervideo_log',
             args: {
@@ -137,10 +137,10 @@ export default function (courseid, hypervideoid, options) {
                 }
             },
             done: function (msg) {
-                 //console.log('server log ok ', msg);
+                 console.log('mod_hypervideo_log ok ', msg);
             },
             fail: function (e) {
-                console.error('fail', e);
+                console.log('mod_hypervideo_log fail ', e);
             }
         }]);
     };

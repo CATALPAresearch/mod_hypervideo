@@ -164,13 +164,10 @@ export default {
             outputType: 1,
             url: this.$store.state.url
         });
-        console.log(1);
         this.logger.init();
-        console.log(2);
     },
     methods: {
         canplay: function(e){
-            console.log(3);
             let _this = this;
             this.video = e.target;
             this.video.setAttribute('id', this.videoid);
@@ -178,7 +175,6 @@ export default {
             this.video.addEventListener('seeking', function(e){
                 //_this.seek_start = _this.video.currentTime || 0;
             });
-            console.log(4);
         },
         timeupdate: function(e){
             this.seek_start = this.video.currentTime;
@@ -266,11 +262,11 @@ WHERE value<>0 AND action='playback'
                     }
                 },
                 done: function (msg) {
-                    console.log('survey log ok ', msg);
+                    console.log('mod_hypervideo_survey ok ', msg);
                     _this.closeOverlay();
                 },
                 fail: function (e) {
-                    console.error('fail', e);
+                    console.error('mod_hypervideo_survey fail', e);
                 }
             }]);
         }
