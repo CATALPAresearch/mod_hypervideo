@@ -2,7 +2,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022100115;
+$plugin->version = 2022100116;
 $plugin->requires = 2017111302;
 $plugin->component = 'mod_hypervideo';
 $plugin->maturity = MATURITY_ALPHA;

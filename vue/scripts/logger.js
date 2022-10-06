@@ -137,7 +137,7 @@ export default function (courseid, hypervideoid, options) {
                 }
             },
             done: function (msg) {
-                 console.log('mod_hypervideo_log ok ', msg);
+                 //console.log('mod_hypervideo_log ok ', msg);
             },
             fail: function (e) {
                 console.log('mod_hypervideo_log fail ', e);

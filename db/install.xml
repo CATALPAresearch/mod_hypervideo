@@ -23,13 +23,13 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="hypervideo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="url" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="context" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="position" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-                <FIELD NAME="action" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-                <FIELD NAME="value" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="actions" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="values" TYPE="text" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>

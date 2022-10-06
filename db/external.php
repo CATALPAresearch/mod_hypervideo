@@ -111,30 +111,31 @@ class mod_hypervideo_external extends external_api {
         
         $d = json_decode($data['entry']);
         $res = -1;
+        //$DB->set_debug(true);
         try {
-            $transaction2 = $DB->start_delegated_transaction();
+            $transaction = $DB->start_delegated_transaction();
             $res = $DB->insert_record('hypervideo_log', [
                 'hypervideo'  => $data['hypervideoid'],
-                'userid' => $USER->id,
+                'userid' => (int) $USER->id,
                 'course' => $data['courseid'],
                 'url' => $d->location->url,
                 'context' => $d->value->context,
                 'position' => round($d->value->currenttime, 3),
-                'action' => $d->action,
-                'value'  => $d->value->values,
+                'actions' => $d->action,
+                'values'  => $d->value->values,
                 'duration'  => round($d->value->duration, 3),
                 'timemodified' => $d->utc
             ]);
-            $transaction2->allow_commit();
+            $transaction->allow_commit();
             //error_log("scrolldb good");
         } catch (Exception $e) {
+            $res = $e;
             $transaction->rollback($e);
             error_log("writing video log to hypervideo log table failed");
         }
-        
+        //$DB->set_debug(false);
         return array('response' => json_encode($res));
-    }    
-  
+    }
 
     public static function log_returns() {
         //return null;
