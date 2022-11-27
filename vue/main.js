@@ -17,14 +17,12 @@ function init(coursemoduleid, contextid, courseid, hypervideoid, fullPluginName,
     
     store.commit('setPluginName', fullPluginName);
     store.commit('setCourseModuleID', coursemoduleid);
-    store.commit('setHypervideoid', hypervideoid);
+    store.commit('setHypervideoid', parseInt(hypervideoid, 10));
     store.commit('setCourseid', courseid);
     store.commit('setContextID', contextid);
     store.commit('setURL', url);
     store.commit('setTitle', title);
     store.dispatch('loadComponentStrings');
-
-    
 
     // base URL is /mod/vuejsdemo/view.php/[course module id]/
     const currenturl = window.location.pathname;

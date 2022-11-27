@@ -14,7 +14,7 @@ export const store = new Vuex.Store({
         contextID: 0,
         courseid: -1,
         url: '',
-        hypervideoid: '',
+        hypervideoid: -1,
         title: '',
         strings: {},
         isModerator: false,        

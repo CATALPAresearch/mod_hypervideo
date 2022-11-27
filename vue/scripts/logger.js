@@ -6,31 +6,34 @@
  * description: Logs user behavior data inclunding informations about the client system, browser, and time.
  * todo:
  */
-import ajax from 'core/ajax';
+import Communication from "./communication";
 
 export default function (courseid, hypervideoid, options) {
     this.courseid = courseid;
     this.hypervideoid = hypervideoid;
-    this.name = 'log_hypervideo';
-    this.ip = '';
+    this.name = "log_hypervideo";
+    this.ip = "";
     this.url = options.url;
 
-    this.init = function(){
-        this.options = this.mergeObjects({
-            outputType: 1, // -1: no logging, 0: console.log(), 1: server log,
-            prefix: '',
-            loggerServiceUrl: null,
-            loggerServiceParams: { "data": {} },
-            context: 'default-context'
-        }, options);
+    this.init = function () {
+        this.options = this.mergeObjects(
+            {
+                outputType: 1, // -1: no logging, 0: console.log(), 1: server log,
+                prefix: "",
+                loggerServiceUrl: null,
+                loggerServiceParams: { data: {} },
+                context: "default-context",
+            },
+            options
+        );
     };
 
     /**
      * Adds a message to the log by constructing a log entry
      */
     this.add = function (action, msg) {
-        if (typeof msg === 'string') {
-            console.log('warning: uncaptured log entry: ' + msg);
+        if (typeof msg === "string") {
+            console.log("warning: uncaptured log entry: " + msg);
             return;
         }
         var time = this.getLogTime();
@@ -54,11 +57,11 @@ export default function (courseid, hypervideoid, options) {
                 engine: navigator.product,
                 browser: navigator.appCodeName,
                 /*browserVersion: navigator.appVersion,
-                userAgent: navigator.userAgent.replace(/,/gm, ';'),
-                screenHeight: screen.height, // document.body.clientHeight
-                screenWidth: screen.width // document.body.clientWidth*/
+                        userAgent: navigator.userAgent.replace(/,/gm, ';'),
+                        screenHeight: screen.height, // document.body.clientHeight
+                        screenWidth: screen.width // document.body.clientWidth*/
                 // retina
-            }
+            },
         };
         this.output(logEntry);
     };
@@ -84,15 +87,26 @@ export default function (courseid, hypervideoid, options) {
 
         return {
             utc: date.getTime(),
-            date: y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d),
-            time: (h <= 9 ? '0' + h : h) + ':' + (mi <= 9 ? '0' + mi : mi) + ':' + (s <= 9 ? '0' + s : s) + ':' + date.getMilliseconds()
+            date: y + "-" + (m <= 9 ? "0" + m : m) + "-" + (d <= 9 ? "0" + d : d),
+            time:
+                (h <= 9 ? "0" + h : h) +
+                ":" +
+                (mi <= 9 ? "0" + mi : mi) +
+                ":" +
+                (s <= 9 ? "0" + s : s) +
+                ":" +
+                date.getMilliseconds(),
         };
     };
 
     this.mergeObjects = function (obj1, obj2) {
         var obj3 = {};
-        for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-        for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+        for (var attrname in obj1) {
+            obj3[attrname] = obj1[attrname];
+        }
+        for (var attrname in obj2) {
+            obj3[attrname] = obj2[attrname];
+        }
         return obj3;
     };
 
@@ -102,7 +116,7 @@ export default function (courseid, hypervideoid, options) {
     this.output = function (logEntry) {
         switch (this.options.outputType) {
             case 0:
-                console.log('case 0: ',logEntry);
+                console.log("case 0: ", logEntry);
                 break;
             case 1:
                 this.sendLog(logEntry);
@@ -116,32 +130,21 @@ export default function (courseid, hypervideoid, options) {
     /**
      * Makes an AJAX call to send the log data set to the server
      */
-    this.sendLog = function (entry) { 
-        let _this = this;
-        /*console.log(9999, {
-            courseid: _this.courseid,
-            hypervideoid: _this.hypervideoid,
-            action: entry.action,
-            utc: Math.ceil(entry.utc / 1000),
-            entry: JSON.stringify(entry)
-        })*/
-        ajax.call([{
-            methodname: 'mod_hypervideo_log',
-            args: {
-                data: {
-                    courseid: _this.courseid,
-                    hypervideoid: _this.hypervideoid,
-                    action: entry.action,
-                    utc: Math.ceil(entry.utc / 1000),
-                    entry: JSON.stringify(entry)
-                }
+    this.sendLog = async function (entry) {
+        const request = await Communication.webservice(
+            'log', {
+            'data': {
+                'courseid': parseInt(this.courseid, 10),
+                'hypervideoid': parseInt(this.hypervideoid, 10),
+                'action': entry.action,
+                'utc': Math.ceil(entry.utc / 1000),
+                'entry': JSON.stringify(entry),
             },
-            done: function (msg) {
-                 //console.log('mod_hypervideo_log ok ', msg);
-            },
-            fail: function (e) {
-                console.log('mod_hypervideo_log fail ', e);
-            }
-        }]);
+        });
+        if (request.success) {
+            console.log("mod_hypervideo_log ok ", request.response);
+        } else {
+            console.log("mod_hypervideo_log fail", request);
+        }
     };
-};
+}

@@ -21,6 +21,15 @@ $functions = array(
         'ajax'        => true,
         'loginrequired' => true
     ),
+    'mod_hypervideo_videoprogress' => array(
+        'classname'   => 'mod_hypervideo_external',
+        'methodname'  => 'videoprogress',
+        'classpath'   => 'mod/hypervideo/db/external.php',
+        'description' => 'Get all users to display.',
+        'type'        => 'read',
+        'ajax'        => true,
+        'loginrequired' => true
+    ),
     'mod_hypervideo_survey' => array(
         'classname'   => 'mod_hypervideo_external',
         'methodname'  => 'survey',
