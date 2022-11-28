@@ -142,7 +142,7 @@ export default function (courseid, hypervideoid, options) {
             },
         });
         if (request.success) {
-            console.log("mod_hypervideo_log ok ", request.response);
+            // console.log("mod_hypervideo_log ok ", request.response);
         } else {
             console.log("mod_hypervideo_log fail", request);
         }

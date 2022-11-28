@@ -5,7 +5,16 @@
                 <vue-core-video-player :src="url" @play="start" @pause="stop" @loadeddata="canplay"
                     @timeupdate="timeupdate" @seeked="seeked" @seeking="seeking" @ended="ended" @abort="stop">
                 </vue-core-video-player>
+                <div 
+                v-if="surveyDismissed" 
+                class="dismissed-btn" 
+                @click="openOverlay()"
+                data-toggle="tooltip" 
+                data-placement="top" 
+                title="Jetzt schnell die Befragung durchführen"
+                ></div>
             </div>
+            
             <div v-if="overlayVisible" class="overlay m-3 p-3">
                 <div class="block mb-3">
                     <div class="question mb-1">
@@ -60,10 +69,10 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-submit btn-secondary" @click="submitSurvey()">
+                <button :disabled="q1 == null || q2 == null || q2 == '' || q2 == ' ' || q3 == null" class="btn btn-submit btn-secondary" @click="submitSurvey()">
                     absenden und weiter
                 </button>
-                <button class="btn btn-link right" @click="closeOverlay()">
+                <button class="btn btn-link right" @click="dismissedSurvey()">
                     jetzt nicht
                 </button>
             </div>
@@ -77,6 +86,7 @@
 
 .player-container {
     z-index: 1;
+    position: relative;
 }
 
 .overlay {
@@ -135,6 +145,45 @@
 .overlay .fa-thumbs-down:hover {
     color: blue;
 }
+
+.dismissed-btn {
+    position: absolute;
+    display: block;
+    bottom: 10px;
+    right: 10px;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    background-color: red;
+    z-index: 30001;
+    animation-name: dismiss;
+    animation-duration: 4s;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+}
+
+.dismissed-btn:hover{
+    width: 20px;
+    height: 20px;
+    animation-name: none;
+}
+
+@keyframes dismiss {
+    from {
+        width: 10px;
+        height: 10px;
+    }
+
+    50% {
+        width: 12px;
+        height: 12px;
+    }
+
+    to {
+        width: 10px;
+        height: 10px;
+    }
+}
 </style>
 <script>
 import Logger from "./scripts/logger";
@@ -148,12 +197,13 @@ export default {
             seek_start: 0,
             videoid: 0,
             videoprogress: 0,
+            duration: 0,
             interval: 2,
             lastposition: -1,
             timer: null,
             logger: null,
             overlayVisible: false,
-            surveyCompleted: 0,
+            surveyCompleted: -1,
             surveyDismissed: false,
             q1: null,
             q2: null,
@@ -176,9 +226,17 @@ export default {
     },
     watch: {
         videoprogress: function (old_progress, current_progress) {
-            console.log(this.videoprogress, current_progress)
-            if (current_progress / this.duration > 0.8 && this.surveyCompleted == 0) {
+            if(this.video.duration == NaN){
+                return;
+            }
+            //console.log('watcher video progress: ', this.videoprogress, this.video.duration, 'res:', this.videoprogress / this.video.duration, ' survey Completed ', this.surveyCompleted)
+            if (
+                this.videoprogress / this.video.duration > 0.8 && 
+                this.surveyCompleted == 0 &&
+                this.surveyDismissed == false
+                ) { 
                 this.overlayVisible = true;
+                this.video.pause();
             }else{
                 this.overlayVisible = false;
             }
@@ -195,14 +253,47 @@ export default {
             });
             if (response.success) {
                 this.videoprogress = parseInt(JSON.parse(response.data).videoprogress * this.interval, 10);
-                this.surveycompleted = JSON.parse(response.data).survey ? JSON.parse(response.data).survey.id : 0;
-                console.log(this.videoprogress, this.surveycompleted);
+                this.surveyCompleted = JSON.parse(response.data).survey ? JSON.parse(response.data).survey.id : 0;
+                //console.log('at start, video progress: ',this.videoprogress, 'survey complete: ', this.surveyCompleted);
             }
+        },
+        submitSurvey: async function () {
+            this.surveyCompleted++;
+            this.surveyDismissed = false;
+            this.closeOverlay();
+            var date = new Date();
+            const request = await Communication.webservice(
+                'survey',
+                {
+                    'data': {
+                        courseid: this.$store.state.courseid,
+                        hypervideoid: this.$store.state.hypervideoid,
+                        url: this.url,
+                        utc: Math.ceil(date.getTime() / 1000),
+                        q1: this.q1,
+                        q2: this.q2,
+                        q3: this.q3,
+                    },
+                }
+            );
+            if (request.success) {
+                
+                //console.log("mod_hypervideo_survey ok ", request.data);
+                this.video.play();
+            } else {
+                console.error("mod_hypervideo_survey fail");
+            }
+        },
+        dismissedSurvey: function(){
+            this.surveyDismissed = true;
+            this.closeOverlay();
+            this.video.play();
         },
         canplay: function (e) {
             let _this = this;
             this.video = e.target;
             this.video.setAttribute("id", this.videoid);
+            
             //console.log("can play");
             this.video.addEventListener("seeking", function (e) {
                 //_this.seek_start = _this.video.currentTime || 0;
@@ -263,10 +354,10 @@ export default {
             this.loop();
         },
         seeking: function (e) {
-            console.log("seeking", this.video.currentTime);
+            //console.log("seeking", this.video.currentTime);
         },
         seeked: function (e) {
-            console.log(e);
+            //console.log(e);
             console.log(
                 "::: seeked started at ",
                 this.seek_start,
@@ -297,34 +388,11 @@ export default {
         },
         openOverlay: function () {
             this.overlayVisible = true;
+            this.video.pause();
         },
         closeOverlay: function () {
             this.overlayVisible = false;
-            this.surveyDismissed = true;
-        },
-        submitSurvey: async function () {
-            var date = new Date();
-            const request = await Communication.webservice(
-                'survey',
-                {
-                    'data': {
-                        courseid: this.$store.state.courseid,
-                        hypervideoid: this.$store.state.hypervideoid,
-                        url: this.url,
-                        utc: Math.ceil(date.getTime() / 1000),
-                        q1: this.q1,
-                        q2: this.q2,
-                        q3: this.q3,
-                    },
-                }
-            );
-            if (request.success) {
-                console.log("mod_hypervideo_survey ok ", request.data);
-                this.closeOverlay();
-            } else {
-                console.error("mod_hypervideo_survey fail");
-            }
-        },
+        }
     },
     computed: {
         url: function () {
