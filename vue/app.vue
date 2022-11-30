@@ -274,8 +274,8 @@ export default {
                         q2: this.q2,
                         q3: this.q3,
                     },
-                }
-            );
+                }ile
+  ilsd ew          );
             if (request.success) {
                 
                 //console.log("mod_hypervideo_survey ok ", request.data);

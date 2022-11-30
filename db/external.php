@@ -109,16 +109,16 @@ class mod_hypervideo_external extends external_api {
         try {
             $transaction2 = $DB->start_delegated_transaction();
             $res = $DB->insert_record('hypervideo_log', [
-                'hypervideo'  => 2,//(int) $data['hypervideoid'],
-                'userid' => 2,//(int) $USER->id,
-                'course' => 2,//(int) $data['courseid'],
-                'url' => 'x',//(String) $d->location->url,
-                'context' => 'x',//(String) $d->value->context,
-                'position' => 'x',//(String) round($d->value->currenttime, 3),
-                'actions' => 'x',//(String) $d->action,
-                'value'  => 'x',//(String) $d->value->values,
-                'timemodified' => 16650,//$d->utc,
-                'duration'  => 2,//(int) round($d->value->duration, 3)
+                'hypervideo'  => (int) $data['hypervideoid'],
+                'userid' => $USER->id,
+                'course' =>  $data['courseid'],
+                'url' => (String) $d->location->url,
+                'context' => (String) $d->value->context,
+                'position' => round($d->value->currenttime, 3),
+                'actions' => (String) $d->action,
+                'values' => (String) $d->value->values,
+                'timemodified' => $d->utc,
+                'duration' => round($d->value->duration, 3)
             ]);
             $transaction2->allow_commit();
         } catch (Exception $e) {
