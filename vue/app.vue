@@ -226,6 +226,8 @@ export default {
     },
     watch: {
         videoprogress: function (old_progress, current_progress) {
+            // FIXME: This is a shortcut to disable the presentation of the overlay
+            return;
             if(this.video.duration == NaN){
                 return;
             }
@@ -233,7 +235,8 @@ export default {
             if (
                 this.videoprogress / this.video.duration > 0.8 && 
                 this.surveyCompleted == 0 &&
-                this.surveyDismissed == false
+                this.surveyDismissed == false &&
+                Math.random() > 0.66
                 ) { 
                 this.overlayVisible = true;
                 this.video.pause();
@@ -274,8 +277,7 @@ export default {
                         q2: this.q2,
                         q3: this.q3,
                     },
-                }ile
-  ilsd ew          );
+                });
             if (request.success) {
                 
                 //console.log("mod_hypervideo_survey ok ", request.data);

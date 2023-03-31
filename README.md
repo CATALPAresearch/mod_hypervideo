@@ -16,6 +16,10 @@ Video player with advanced logging functionality and short survey.
 - follow the install instruction in the Moodle administration area
 - Include an URL of a video file in a text so that the plugin will display the hypervideo player with the video
 
+# Maintanance
+
+* Set tag for integration into the production system: `git tag -d ws2223 && git push --delete origin ws2223 && git tag ws2223 && git push origin ws2223`
+
 # Credits
 * https://github.com/core-player/vue-core-video-player
 
