@@ -32,6 +32,7 @@ export default function (courseid, hypervideoid, options) {
      * Adds a message to the log by constructing a log entry
      */
     this.add = function (action, msg) {
+    
         if (typeof msg === "string") {
             console.log("warning: uncaptured log entry: " + msg);
             return;

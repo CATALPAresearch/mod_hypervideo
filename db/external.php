@@ -111,20 +111,21 @@ class mod_hypervideo_external extends external_api {
             $res = $DB->insert_record('hypervideo_log', [
                 'hypervideo'  => (int) $data['hypervideoid'],
                 'userid' => $USER->id,
-                'course' =>  $data['courseid'],
+                'course' =>  (int)$data['courseid'],
                 'url' => (String) $d->location->url,
                 'context' => (String) $d->value->context,
-                'position' => round($d->value->currenttime, 3),
-                'actions' => (String) $d->action,
-                'values' => (String) $d->value->values,
-                'timemodified' => $d->utc,
-                'duration' => round($d->value->duration, 3)
+                'position' => (String) round($d->value->currenttime, 3),
+                'actions' => (String) $d->value->action,
+                'val' => strval($d->value->values), //''.$d->value->values,
+                'duration' => round($d->value->duration, 3),
+                'timemodified' => (int)$d->utc,
             ]);
+            //error_log('xxxxxxxx ' . print_r($d->value->values) . '---'.$d->value->values);
             $transaction2->allow_commit();
         } catch (Exception $e) {
             $res = $e;
             $transaction2->rollback($e);
-            //error_log("writing video log to hypervideo log table failed");
+            error_log("writing video log to hypervideo log table failed");
         }
         
         $DB->set_debug(false);
