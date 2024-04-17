@@ -157,9 +157,10 @@ tba
 
 ## Citation
 
-Seidel, N. (2024). Hypervideo - An activity plugin for hypervideos in Moodle. https://doi.org/10.17605/OSF.IO/YP2XU
+> Seidel, N. (2024). Hypervideo - An activity plugin for hypervideos in Moodle. https://doi.org/10.17605/OSF.IO/YP2XU
 
-> @misc{Seidel2024-MoodleHypervideo,
+````
+@misc{Seidel2024-MoodleHypervideo,
 author = {Seidel, Niels},
 doi = {10.17605/OSF.IO/YP2XU},
 keywords = {P-APLE-II,open data,software},
@@ -167,7 +168,7 @@ title = {{Hypervideo - An activity plugin for hypervideos in Moodle}},
 url = {https://github.com/CATALPAresearch/mod{\_}hypervideo},
 year = {2024}
 }
-
+```
 
 ## You may also like ...
 
