@@ -63,7 +63,7 @@ Compliance
 
 <br><br>
 <p align="center" hidden>
-  ![Screenshot of the GUI to read and annotate](./screenshot.png)
+  
 </p>
 
 <p align="center">
@@ -79,8 +79,6 @@ Compliance
 
 ## Key Features
 
-The main features *Hypervideo* are:
-
 **Video player:**
 * Lean HTML 5 video player
 * responsive design for mobile use
@@ -93,7 +91,8 @@ The main features *Hypervideo* are:
 ## Roadmap and Limitations
 **Roadmap**
 * Split the db/external.php into distinct servives stored in separated files.
-* add further interactive controls like user defined annotations
+* add further interactive elements like user defined annotations, comments, highligts
+* add video assessments
 * switch to webpack 5 to reduce the bundle size and speedup transpilation
 
 **Limitations**
